@@ -3,6 +3,7 @@ package com.thoughtctl
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -57,9 +58,11 @@ class SearchActivity : AppCompatActivity() {
             when (it.status) {
                 Status.LOADING -> {
                     showShimmer()
+                    disableInput()
 
                 }
                 Status.SUCCESS -> {
+                    enableInput()
                     hideShimmer()
                     val response = it.data as? ImgurResponseModel
                     if (response?.data?.isNotEmpty() == true) {
@@ -71,6 +74,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
                 Status.ERROR -> {
+                    enableInput()
                     hideShimmer()
                     showErrorToast(it.error)
                 }
@@ -79,13 +83,24 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun enableInput() {
+        mBinding.edQuery.isEnabled = true
+        mBinding.icListType.isEnabled = true
+    }
+
+    private fun disableInput() {
+        mBinding.edQuery.isEnabled = false
+        mBinding.icListType.isEnabled = false
+    }
+
     private fun showErrorToast(error: Throwable?) {
-        Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Failed to load images, please try after sometime", Toast.LENGTH_LONG)
+            .show()
     }
 
     private fun refreshAdapter() {
         if (::adapter.isInitialized) {
-            adapter.refreshData(imagesList,isListView)
+            adapter.refreshData(imagesList, isListView)
         } else {
             adapter = SearchResultsAdapter(this, imagesList, isListView)
             mBinding.recyclerImages.adapter = adapter
@@ -128,10 +143,31 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showShimmer() {
-
+        mBinding.recyclerImages.visibility = View.GONE
+        if (isListView) {
+            mBinding.shimmerListContainer.shimmerList.apply {
+                visibility = View.VISIBLE
+                mBinding.shimmerListContainer.shimmerList.startShimmer()
+            }
+        } else {
+            mBinding.shimmerGridContainer.shimmerGrid.apply {
+                visibility = View.VISIBLE
+                mBinding.shimmerListContainer.shimmerList.startShimmer()
+            }
+        }
     }
 
     private fun hideShimmer() {
+        mBinding.recyclerImages.visibility = View.VISIBLE
+        mBinding.shimmerGridContainer.shimmerGrid.apply {
+            visibility = View.GONE
+            mBinding.shimmerGridContainer.shimmerGrid.stopShimmer()
+        }
+        mBinding.shimmerListContainer.shimmerList.apply {
+            visibility = View.GONE
+            mBinding.shimmerListContainer.shimmerList.stopShimmer()
+
+        }
 
     }
 

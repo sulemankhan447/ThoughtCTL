@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp20"
             android:layout_marginTop="@dimen/dp20"
-            android:hint="enter keywords to search i.e cat"
+            android:hint="Enter keywords to search i.e cat"
             android:imeOptions="actionDone"
             android:maxLength="10"
             android:padding="@dimen/dp20"
@@ -46,7 +46,28 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ed_query"
             tools:itemCount="4"
-            tools:listitem="@layout/item_grid" />
+            tools:listitem="@layout/item_list"
+            tools:visibility="visible" />
+
+
+        <include
+            android:id="@+id/shimmerListContainer"
+            layout="@layout/shimmer_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ed_query" />
+
+        <include
+            android:id="@+id/shimmerGridContainer"
+            layout="@layout/shimmer_grid"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ed_query" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

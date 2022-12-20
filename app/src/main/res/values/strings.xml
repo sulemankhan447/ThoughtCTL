@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ThoughtCTL</string>
+    <string name="title_of_image">Title of image</string>
+    <string name="more_images_available">%d more images available</string>
 </resources>

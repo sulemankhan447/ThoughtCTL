@@ -1,6 +1,6 @@
 package com.thoughtctl.di
 
-import com.thoughtctl.MainActivity
+import com.thoughtctl.SearchActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -8,5 +8,5 @@ import javax.inject.Singleton
 @Component(modules = [NetworkModule::class])
 interface AppComponent {
 
-    fun inject(mainActivity: MainActivity)
+    fun inject(searchActivity: SearchActivity)
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.text.TextUtils
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.thoughtctl.model.Image
+import com.thoughtctl.model.ImgurModel
 
 object ImageUtils {
 
@@ -33,6 +35,10 @@ object ImageUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun fetchImageFromModel(imageList: ArrayList<Image>): String? {
+        return if (imageList.isNotEmpty()) imageList?.first()?.link else ""
     }
 
 }

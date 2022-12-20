@@ -9,6 +9,7 @@ import com.thoughtctl.R
 import com.thoughtctl.databinding.ItemGridBinding
 import com.thoughtctl.databinding.ItemListBinding
 import com.thoughtctl.model.ImgurModel
+import com.thoughtctl.utils.DateUtils
 import com.thoughtctl.utils.ImageUtils
 
 class SearchResultsAdapter(
@@ -62,12 +63,14 @@ class SearchResultsAdapter(
             holder.itemListView?.apply {
                 tvTitle.text = data.title
                 tvDatePosted.text =
-                    if (data.images.isNotEmpty()) data.images.first().datetime?.toString() else "Today"
+                    DateUtils.getDateTimeOfPost(data.images?: ArrayList())
                 tvAdditionalImagesCount.text =
                     context.getString(R.string.more_images_available, data.images_count)
                 ImageUtils.loadImage(
                     context,
-                    if (data.images.isNotEmpty()) data.images.first().link else "",
+                    ImageUtils.fetchImageFromModel(
+                        data?.images ?: ArrayList()
+                    ),
                     icImage,
                     R.drawable.ic_loading_placeholder,
                     R.drawable.ic_error_placeholder
@@ -77,13 +80,14 @@ class SearchResultsAdapter(
         } else {
             holder.itemGridView?.apply {
                 tvTitle.text = data.title
-                tvDatePosted.text =
-                    if (data.images.isNotEmpty()) data.images.first().datetime?.toString() else "Today"
+                tvDatePosted.text = DateUtils.getDateTimeOfPost(data.images?:ArrayList())
                 tvAdditionalImagesCount.text =
                     context.getString(R.string.more_images_available, data.images_count)
                 ImageUtils.loadImage(
                     context,
-                    if (data.images.isNotEmpty()) data.images.first().link else "",
+                    ImageUtils.fetchImageFromModel(
+                        data?.images ?: ArrayList()
+                    ),
                     icImage,
                     R.drawable.ic_loading_placeholder,
                     R.drawable.ic_error_placeholder

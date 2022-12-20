@@ -6,7 +6,7 @@ data class ImgurResponseModel(
 
 data class ImgurModel(
     val title: String? = "",
-    val images: List<Image>,
+    val images: ArrayList<Image>?=ArrayList(),
     val images_count: Int,
 )
 

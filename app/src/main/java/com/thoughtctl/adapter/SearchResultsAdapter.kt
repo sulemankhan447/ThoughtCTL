@@ -2,7 +2,6 @@ package com.thoughtctl.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +9,7 @@ import com.thoughtctl.R
 import com.thoughtctl.databinding.ItemGridBinding
 import com.thoughtctl.databinding.ItemListBinding
 import com.thoughtctl.model.ImgurModel
+import com.thoughtctl.utils.ImageUtils
 
 class SearchResultsAdapter(
     val context: Context,
@@ -42,8 +42,7 @@ class SearchResultsAdapter(
             return ViewHolder(
                 DataBindingUtil.inflate(
                     inflater,
-                    R.layout.item_list,
-                    parent,
+                    R.layout.item_list, parent,
                     false
                 ) as ItemListBinding
             )
@@ -60,15 +59,36 @@ class SearchResultsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = results[position]
         if (holder.itemViewType == LIST_VIEW) {
-            holder.itemListView?.tvTitle?.text = data.title
-            holder.itemListView?.tvDatePosted?.text = data.images?.first()?.datetime.toString()
-            holder.itemListView?.tvAdditionalImagesCount?.text =
-                context.getString(R.string.more_images_available, data.images_count)
+            holder.itemListView?.apply {
+                tvTitle.text = data.title
+                tvDatePosted.text =
+                    if (data.images.isNotEmpty()) data.images.first().datetime?.toString() else "Today"
+                tvAdditionalImagesCount.text =
+                    context.getString(R.string.more_images_available, data.images_count)
+                ImageUtils.loadImage(
+                    context,
+                    if (data.images.isNotEmpty()) data.images.first().link else "",
+                    icImage,
+                    R.drawable.ic_loading_placeholder,
+                    R.drawable.ic_error_placeholder
+                )
+            }
+
         } else {
-            holder.itemGridView?.tvTitle?.text = data.title
-            holder.itemGridView?.tvDatePosted?.text = data.images?.first()?.datetime.toString()
-            holder.itemGridView?.tvAdditionalImagesCount?.text =
-                context.getString(R.string.more_images_available, data.images_count)
+            holder.itemGridView?.apply {
+                tvTitle.text = data.title
+                tvDatePosted.text =
+                    if (data.images.isNotEmpty()) data.images.first().datetime?.toString() else "Today"
+                tvAdditionalImagesCount.text =
+                    context.getString(R.string.more_images_available, data.images_count)
+                ImageUtils.loadImage(
+                    context,
+                    if (data.images.isNotEmpty()) data.images.first().link else "",
+                    icImage,
+                    R.drawable.ic_loading_placeholder,
+                    R.drawable.ic_error_placeholder
+                )
+            }
         }
     }
 
@@ -80,8 +100,9 @@ class SearchResultsAdapter(
         return results.size
     }
 
-    fun refreshData(results: List<ImgurModel>) {
+    fun refreshData(results: List<ImgurModel>, showListView: Boolean) {
         this.results = results
+        this.showListView = showListView
         notifyDataSetChanged()
     }
 }

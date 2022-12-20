@@ -18,6 +18,7 @@ import com.thoughtctl.databinding.ActivitySearchBinding
 import com.thoughtctl.model.ImgurModel
 import com.thoughtctl.model.ImgurResponseModel
 import com.thoughtctl.model.SearchRequestModel
+import com.thoughtctl.utils.GridSpacingItemDecoration
 import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity() {
@@ -29,6 +30,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
 
     private lateinit var mBinding: ActivitySearchBinding
+
+    private var isListView: Boolean = true
 
 
     private val imagesList: ArrayList<ImgurModel> = ArrayList()
@@ -42,7 +45,7 @@ class SearchActivity : AppCompatActivity() {
         val appComponent = (application as BaseApplication).appComponent
         appComponent.inject(this)
         searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
-        changeLayout(true)
+        changeLayout()
         setUpListener()
         setUpObserver()
 
@@ -82,9 +85,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun refreshAdapter() {
         if (::adapter.isInitialized) {
-            adapter.refreshData(imagesList)
+            adapter.refreshData(imagesList,isListView)
         } else {
-            adapter = SearchResultsAdapter(this, imagesList)
+            adapter = SearchResultsAdapter(this, imagesList, isListView)
             mBinding.recyclerImages.adapter = adapter
         }
         mBinding.recyclerImages.layoutManager = mLayoutManager
@@ -92,7 +95,10 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    private fun changeLayout(isListView: Boolean) {
+    private fun changeLayout() {
+        while (mBinding.recyclerImages.itemDecorationCount > 0) {
+            mBinding.recyclerImages.removeItemDecorationAt(0);
+        }
         if (isListView) {
             mBinding.icListType.setImageDrawable(
                 ActivityCompat.getDrawable(
@@ -109,6 +115,15 @@ class SearchActivity : AppCompatActivity() {
                 )
             )
             mLayoutManager = GridLayoutManager(this, 2)
+
+            mBinding.recyclerImages.addItemDecoration(
+                GridSpacingItemDecoration(
+                    2,
+                    20,
+                    true
+                )
+            )
+
         }
     }
 
@@ -130,12 +145,8 @@ class SearchActivity : AppCompatActivity() {
 
         }
         mBinding.icListType.setOnClickListener {
-            if (mBinding.recyclerImages.layoutManager is GridLayoutManager) {
-                changeLayout(true)
-            } else {
-                changeLayout(false)
-
-            }
+            isListView = mBinding.recyclerImages.layoutManager is GridLayoutManager
+            changeLayout()
             refreshAdapter()
         }
 

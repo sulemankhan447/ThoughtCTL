@@ -1,7 +1,5 @@
 package com.thoughtctl.di
 
-import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.thoughtctl.BaseApplication
 import com.thoughtctl.Constants
 import com.thoughtctl.api.NetworkInterface
 import dagger.Module
@@ -18,7 +16,6 @@ class NetworkModule {
     @Singleton
     fun providesRetrofit(): Retrofit {
         val okHttp = OkHttpClient.Builder()
-            .addInterceptor(BaseApplication.context?.let { ChuckerInterceptor(it) })
             .build()
 
         return Retrofit.Builder().baseUrl(Constants.BASE_URL)

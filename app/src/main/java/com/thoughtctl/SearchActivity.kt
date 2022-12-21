@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thoughtctl.adapter.SearchResultsAdapter
-import com.thoughtctl.api.Status
+import com.thoughtctl.api.UiState
 import com.thoughtctl.databinding.ActivitySearchBinding
 import com.thoughtctl.model.ImgurModel
 import com.thoughtctl.model.ImgurResponseModel
@@ -54,27 +52,26 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpObserver() {
-        searchViewModel.imagesLiveData.observe(this) {
-            when (it.status) {
-                Status.LOADING -> {
+        searchViewModel.uiState.observe(this) {
+            when (it) {
+                is UiState.Loading -> {
                     showShimmer()
                     disableInput()
 
                 }
-                Status.SUCCESS -> {
+                is UiState.Success -> {
                     enableInput()
                     hideShimmer()
-                    val response = it.data as? ImgurResponseModel
-                    if (response?.data?.isNotEmpty() == true) {
+                    if (it.response?.data?.isNotEmpty() == true) {
                         imagesList.clear()
-                        imagesList.addAll(response?.data ?: ArrayList())
+                        imagesList.addAll(it.response?.data)
                         refreshAdapter()
                     } else {
                         //No images from api
                         showNoImagesFoundLayout()
                     }
                 }
-                Status.ERROR -> {
+                is UiState.Error -> {
                     enableInput()
                     hideShimmer()
                     showImageLoadFailedLayout()

@@ -3,8 +3,9 @@ package com.thoughtctl
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thoughtctl.api.ApiResponseGeneric
 import com.thoughtctl.api.NetworkInterface
+import com.thoughtctl.api.UiState
+import com.thoughtctl.model.ImgurResponseModel
 import com.thoughtctl.model.SearchRequestModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,10 +13,12 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(private val networkInterface: NetworkInterface) :
     ViewModel() {
 
-    val imagesLiveData = MutableLiveData<ApiResponseGeneric<Any>>()
+
+    val uiState = MutableLiveData<UiState<ImgurResponseModel>>()
+
 
     fun searchImages(request: SearchRequestModel) {
-        imagesLiveData.value = ApiResponseGeneric.loading()
+        uiState.value = UiState.Loading()
         val mapOf: HashMap<String, String> = HashMap()
         mapOf["q"] = request.q ?: ""
         viewModelScope.launch {
@@ -29,14 +32,13 @@ class SearchViewModel @Inject constructor(private val networkInterface: NetworkI
             }.onSuccess { result ->
                 if (result.isSuccessful) {
                     val response = result.body()
-                    imagesLiveData.value = ApiResponseGeneric.success(response)
+                    uiState.value = UiState.Success(response)
                 } else {
-                    imagesLiveData.value =
-                        ApiResponseGeneric.error(Throwable("Failed to load images"))
+                    uiState.value = UiState.Error(Throwable("Failed to load images"))
                 }
 
             }.onFailure {
-                imagesLiveData.value = ApiResponseGeneric.error(it)
+                uiState.value = UiState.Error(it)
             }
 
         }

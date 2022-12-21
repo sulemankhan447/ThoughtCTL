@@ -71,15 +71,36 @@ class SearchActivity : AppCompatActivity() {
                         refreshAdapter()
                     } else {
                         //No images from api
+                        showNoImagesFoundLayout()
                     }
                 }
                 Status.ERROR -> {
                     enableInput()
                     hideShimmer()
-                    showErrorToast(it.error)
+                    showImageLoadFailedLayout()
                 }
             }
 
+        }
+    }
+
+    private fun showNoImagesFoundLayout() {
+        mBinding.recyclerImages.visibility = View.GONE
+        mBinding.errorLayout.apply {
+            errorContainer.visibility = View.VISIBLE
+            tvErrorMsg.text = "No images found for ${mBinding.edQuery.text.toString().trim()}"
+            ivErrorImage.setImageResource(R.drawable.ic_not_found)
+            btnRetry.visibility = View.GONE
+        }
+    }
+
+    private fun showImageLoadFailedLayout() {
+        mBinding.recyclerImages.visibility = View.GONE
+        mBinding.errorLayout.apply {
+            errorContainer.visibility = View.VISIBLE
+            tvErrorMsg.text = "Failed to load image for  ${mBinding.edQuery.text.toString().trim()}"
+            ivErrorImage.setImageResource(R.drawable.ic_error)
+            btnRetry.visibility = View.GONE
         }
     }
 
@@ -93,10 +114,6 @@ class SearchActivity : AppCompatActivity() {
         mBinding.icListType.isEnabled = false
     }
 
-    private fun showErrorToast(error: Throwable?) {
-        Toast.makeText(this, "Failed to load images, please try after sometime", Toast.LENGTH_LONG)
-            .show()
-    }
 
     private fun refreshAdapter() {
         if (::adapter.isInitialized) {
@@ -144,6 +161,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showShimmer() {
         mBinding.recyclerImages.visibility = View.GONE
+        mBinding.errorLayout.errorContainer.visibility = View.GONE
         if (isListView) {
             mBinding.shimmerListContainer.shimmerList.apply {
                 visibility = View.VISIBLE
@@ -189,6 +207,13 @@ class SearchActivity : AppCompatActivity() {
             refreshAdapter()
         }
 
+        mBinding.errorLayout.btnRetry.setOnClickListener {
+            searchViewModel.searchImages(
+                SearchRequestModel(
+                    q = mBinding.edQuery.text.toString().trim()
+                )
+            )
+        }
 
     }
 }

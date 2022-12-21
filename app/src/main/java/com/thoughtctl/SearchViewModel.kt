@@ -1,6 +1,5 @@
 package com.thoughtctl
 
-import android.util.MutableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

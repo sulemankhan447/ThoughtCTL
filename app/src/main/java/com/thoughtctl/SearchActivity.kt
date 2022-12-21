@@ -175,6 +175,9 @@ class SearchActivity : AppCompatActivity() {
         mBinding.edQuery.doAfterTextChanged {
             val input = it.toString().trim()
             if (!TextUtils.isEmpty(input) && input.length > 2) {
+                /**
+                 * Start search on atleast 3 chars written by user.
+                 */
                 searchViewModel.searchImages(SearchRequestModel(q = input))
 
             }

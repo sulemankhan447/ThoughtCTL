@@ -100,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
             errorContainer.visibility = View.VISIBLE
             tvErrorMsg.text = "Failed to load image for  ${mBinding.edQuery.text.toString().trim()}"
             ivErrorImage.setImageResource(R.drawable.ic_error)
-            btnRetry.visibility = View.GONE
+            btnRetry.visibility = View.VISIBLE
         }
     }
 

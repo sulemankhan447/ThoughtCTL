@@ -21,6 +21,7 @@
             android:layout_marginTop="@dimen/dp20"
             android:hint="Enter keywords to search i.e cat"
             android:imeOptions="actionDone"
+            android:singleLine="true"
             android:maxLength="10"
             android:padding="@dimen/dp20"
             app:layout_constraintStart_toStartOf="parent"

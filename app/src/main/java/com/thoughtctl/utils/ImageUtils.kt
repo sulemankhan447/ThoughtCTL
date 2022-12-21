@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.thoughtctl.R
 import com.thoughtctl.model.Image
 import com.thoughtctl.model.ImgurModel
 
@@ -39,6 +40,16 @@ object ImageUtils {
 
     fun fetchImageFromModel(imageList: ArrayList<Image>): String? {
         return if (imageList.isNotEmpty()) imageList?.first()?.link else ""
+    }
+
+    fun getMoreImagesAvailable(context: Context, data: ImgurModel): String {
+        val count = data.images_count
+        return if (count > 1) {
+            context.getString(R.string.more_images_available, count)
+        } else {
+            context.getString(R.string.more_image_available, count)
+        }
+
     }
 
 }

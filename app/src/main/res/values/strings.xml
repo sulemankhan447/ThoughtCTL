@@ -2,6 +2,7 @@
     <string name="app_name">ThoughtCTL</string>
     <string name="title_of_image">Title of image</string>
     <string name="more_images_available">%d more images available</string>
+    <string name="more_image_available">%d more image available</string>
     <string name="retry">Retry</string>
     <string name="failed_to_load_images">Failed to load images for</string>
 </resources>

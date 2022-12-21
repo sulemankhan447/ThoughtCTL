@@ -64,8 +64,7 @@ class SearchResultsAdapter(
                 tvTitle.text = data.title
                 tvDatePosted.text =
                     DateUtils.getDateTimeOfPost(data.images?: ArrayList())
-                tvAdditionalImagesCount.text =
-                    context.getString(R.string.more_images_available, data.images_count)
+                tvAdditionalImagesCount.text = ImageUtils.getMoreImagesAvailable(context,data)
                 ImageUtils.loadImage(
                     context,
                     ImageUtils.fetchImageFromModel(
@@ -82,7 +81,7 @@ class SearchResultsAdapter(
                 tvTitle.text = data.title
                 tvDatePosted.text = DateUtils.getDateTimeOfPost(data.images?:ArrayList())
                 tvAdditionalImagesCount.text =
-                    context.getString(R.string.more_images_available, data.images_count)
+                    ImageUtils.getMoreImagesAvailable(context,data)
                 ImageUtils.loadImage(
                     context,
                     ImageUtils.fetchImageFromModel(
